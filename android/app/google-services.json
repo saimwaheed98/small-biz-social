@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "889632764652",
+    "project_id": "small-biz-social-30ff3",
+    "storage_bucket": "small-biz-social-30ff3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889632764652:android:53153a7bab1a2a2dc82bc9",
+        "android_client_info": {
+          "package_name": "com.smartbiz.smartbiz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1vmoovh3EyYcomBqVBQzIWkXJ7wm4ruc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
