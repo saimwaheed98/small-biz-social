@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SubscriptionModel {
-  final String id;
-  final double price;
-  final DateTime endDate;
-  final DateTime startDate;
+  late final String id;
+  late final double price;
+  late final DateTime endDate;
+  late final DateTime startDate;
 
   SubscriptionModel({
     required this.id,

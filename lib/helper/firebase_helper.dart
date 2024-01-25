@@ -105,6 +105,21 @@ class Apis {
     });
   }
 
+  // get the data of the user subscription
+  static Future<Map<String, dynamic>> getSubscriptionDetails() async {
+    Map<String, dynamic> subscriptiondata = {};
+    await firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('subscription')
+        .doc('details')
+        .get()
+        .then((value) {
+      subscriptiondata = value.data()!;
+    });
+    return subscriptiondata;
+  }
+
   // update user bio
   static Future<void> updateBio(String bio) async {
     await firestore.collection('users').doc(userDetail.uid).update({

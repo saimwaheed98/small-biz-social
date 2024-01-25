@@ -1,18 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:smallbiz/helper/alert_dialouge.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
+import 'package:smallbiz/helper/images_strings.dart';
 import 'dart:async';
 
 import 'package:smallbiz/models/post_model.dart';
 import 'package:smallbiz/referal_link/create_link.dart';
 import 'package:smallbiz/referal_link/create_link_post.dart';
+import 'package:smallbiz/screens/subscription_setup/ui/subscription_setup_screen.dart';
 
 class HomeScreenProvider extends ChangeNotifier {
   // check if the user come from link
   checkUserLink(context) {
     DeepLinkService().initDynamicLinks(context);
     DeepLinkPostService().initDynamicLinks(context);
+    checkSubscription().then((value) {
+      if (value == true) {
+        debugPrint('subscription value $value');
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialouge(
+                buttonText: 'Subscribe',
+                details:
+                    'Please Subscribe Small Biz Socail to Create Post easily',
+                image: Images.sadImage,
+                message: 'Oopps!',
+                onPressed: () {
+                  Navigator.of(context).pushNamed(SubscriptionSetup.routename);
+                });
+          },
+        );
+      }
+    });
   }
 
   // check if the post is being searched

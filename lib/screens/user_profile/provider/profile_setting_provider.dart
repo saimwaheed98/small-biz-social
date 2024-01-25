@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
 import 'package:smallbiz/helper/warning_helper.dart';
+import 'package:smallbiz/models/subscription_model.dart';
 
 class ProfileSettingProvider extends ChangeNotifier {
   // get the formkey for the text fields
@@ -30,6 +31,30 @@ class ProfileSettingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // get the user subscription details
+  DateTime? _subscriptionEndDate;
+  DateTime? get subscriptionEndDate => _subscriptionEndDate;
+  setSubscriptionEndDate(DateTime? value) {
+    _subscriptionEndDate = value;
+    notifyListeners();
+  }
+
+  DateTime? _subscriptionStartDate;
+  DateTime? get subscriptionStartDate => _subscriptionStartDate;
+  setSubscriptionStartDate(DateTime? value) {
+    _subscriptionStartDate = value;
+    notifyListeners();
+  }
+
+  Future<void> getSubscriptionDetails() async {
+    await Apis.getSubscriptionDetails().then((value) {
+      setSubscriptionEndDate(SubscriptionModel.fromMap(value).endDate);
+      setSubscriptionStartDate(SubscriptionModel.fromMap(value).startDate);
+      notifyListeners();
+      debugPrint('details $subscriptionEndDate');
+      debugPrint('details $subscriptionStartDate');
+    });
+  }
   // check if there is any change happen in the controllers
 
   onControllerChange() {

@@ -14,7 +14,6 @@ import 'package:smallbiz/screens/home/home_screen_widgets/search_form_field.dart
 import 'package:smallbiz/screens/home/provider/create_post_screen_provider.dart';
 import 'package:smallbiz/screens/home/provider/home_screen_provider.dart';
 import 'package:smallbiz/screens/splash_screen/providers/splash_screen_provider.dart';
-import 'package:smallbiz/screens/subscription_setup/ui/subscription_setup_screen.dart';
 import 'package:smallbiz/screens/users_chat/provider/chat_screen_provider.dart';
 import 'package:smallbiz/utils/colors.dart';
 import 'package:smallbiz/widgets/profile_avatar.dart';
@@ -31,27 +30,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<HomeScreenProvider>(context, listen: false);
-    // check if the subscription is ended
-    provider.checkSubscription().then((value) {
-      if (value == true) {
-        debugPrint('subscription value $value');
-      } else {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return Dialouge(
-                buttonText: 'Subscribe',
-                details:
-                    'Please Subscribe Small Biz Socail to Create Post easily',
-                image: Images.sadImage,
-                message: 'Oopps!',
-                onPressed: () {
-                  Navigator.of(context).pushNamed(SubscriptionSetup.routename);
-                });
-          },
-        );
-      }
-    });
+    provider.initialize();
     // check if the user come from link
     Provider.of<HomeScreenProvider>(context, listen: false)
         .checkUserLink(context);

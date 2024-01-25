@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
 import 'package:smallbiz/helper/image_picker.dart';
@@ -26,6 +25,9 @@ class ProfileSetting extends StatelessWidget {
     var imageProvider =
         Provider.of<ImagePickerProvider>(context, listen: false);
     var provider = Provider.of<ProfileSettingProvider>(context, listen: false);
+    // get the details of the subscription
+    Apis.getSubscriptionDetails();
+    provider.getSubscriptionDetails();
     // initialize the value of the controllers to respect with userDetails
     provider.firstNameController.text = Apis.userDetail.firstName;
     provider.lastNameController.text = Apis.userDetail.lastName;
@@ -33,7 +35,6 @@ class ProfileSetting extends StatelessWidget {
     provider.controller.text = Apis.userDetail.subscription == true
         ? 'You are subscribed'
         : 'You are not subscribed';
-
     // then build the screen
     return Scaffold(
       backgroundColor: scaffoldColor,
@@ -60,13 +61,11 @@ class ProfileSetting extends StatelessWidget {
               onPressed: () async {
                 await Apis.updateActiveStatus(false);
                 await Apis.auth.signOut().then((value) {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => CreateAccount(),
+                  ));
                   WarningHelper.showWarningDialog(
                       context, 'Sign Out', 'Signed Out Successfully');
-                  PersistentNavBarNavigator.pushDynamicScreen(context,
-                      screen: MaterialPageRoute(
-                          builder: (context) => CreateAccount(),
-                          fullscreenDialog: true),
-                      withNavBar: false);
                 });
               },
               icon: const Icon(
@@ -160,6 +159,8 @@ class ProfileSetting extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 70),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ProfileSettingTextField(
                           lableText: 'Firstname',
@@ -213,6 +214,47 @@ class ProfileSetting extends StatelessWidget {
                           lableText: 'Subscription status',
                           controller: provider.controller,
                           canEdit: false,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: AppTextStyle(
+                              textName: 'Subscription Start Date',
+                              textColor: primaryTextColor,
+                              textSize: 18,
+                              textWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: AppTextStyle(
+                              textName:
+                                  '${provider.subscriptionStartDate?.day}/ ${provider.subscriptionStartDate?.month}/ ${provider.subscriptionStartDate?.year}',
+                              textColor: primaryTextColor,
+                              textSize: 16,
+                              textWeight: FontWeight.w500),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: AppTextStyle(
+                              textName: 'Subscription Ending Date',
+                              textColor: primaryTextColor,
+                              textSize: 18,
+                              textWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: AppTextStyle(
+                              textName: '${provider.subscriptionEndDate?.day}/ '
+                                  '${provider.subscriptionEndDate?.month}/ '
+                                  '${provider.subscriptionEndDate?.year}',
+                              textColor: primaryTextColor,
+                              textSize: 16,
+                              textWeight: FontWeight.w500),
                         ),
                       ],
                     ),
