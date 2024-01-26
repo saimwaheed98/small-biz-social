@@ -8,6 +8,7 @@ import 'package:smallbiz/screens/chat_room/ui/chat_room_screen.dart';
 import 'package:smallbiz/screens/home/ui/home_screen.dart';
 import 'package:smallbiz/screens/notification/notification_screen.dart';
 import 'package:smallbiz/screens/subscription_setup/ui/subscription_setup_screen.dart';
+import 'package:smallbiz/screens/user_profile/ui/user_profile_screen.dart';
 import 'package:smallbiz/screens/users_chat/ui/user_chat_screen.dart';
 import 'package:smallbiz/utils/colors.dart';
 
@@ -24,6 +25,9 @@ class BottomBar extends StatelessWidget {
         const SubscriptionSetup(isNewUser: false),
         const NotificationScreen(),
         UserChat(),
+        UserProfile(
+          isUser: true,
+        )
       ];
 
   List<PersistentBottomNavBarItem> _navBarsItems(BuildContext context) {
@@ -104,6 +108,18 @@ class BottomBar extends StatelessWidget {
             width: 20,
           ),
           title: "Chat",
+          textStyle: GoogleFonts.dmSans(color: buttonColor),
+          activeColorPrimary: Colors.transparent,
+          inactiveColorPrimary: Colors.black,
+          activeColorSecondary: buttonColor),
+      PersistentBottomNavBarItem(
+          icon: const Icon(Icons.person_rounded),
+          inactiveIcon: const Icon(
+            Icons.person_outlined,
+            size: 26,
+            color: black,
+          ),
+          title: "Profile",
           textStyle: GoogleFonts.dmSans(color: buttonColor),
           activeColorPrimary: Colors.transparent,
           inactiveColorPrimary: Colors.black,

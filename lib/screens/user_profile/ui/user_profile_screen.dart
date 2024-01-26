@@ -190,7 +190,7 @@ class UserProfile extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(4),
                                         color: buttonColor),
                                     child: Text(
-                                      'Bio ${user?.firstName ?? postData?.username ?? commentData?.userName ?? ''}',
+                                      'Message ${user?.firstName ?? postData?.username ?? commentData?.userName ?? ''}',
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.dmSans(
                                           fontSize: isUser == false ? 14 : 20,

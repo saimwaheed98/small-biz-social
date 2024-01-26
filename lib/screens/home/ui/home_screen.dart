@@ -1,11 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:smallbiz/helper/alert_dialouge.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
 import 'package:smallbiz/helper/images_strings.dart';
-import 'package:smallbiz/helper/shimmer_effect.dart';
 import 'package:smallbiz/helper/text_style.dart';
 import 'package:smallbiz/models/post_model.dart';
 import 'package:smallbiz/screens/home/home_screen_widgets/pop_up_menue.dart';
@@ -74,120 +73,138 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 30),
               child: Column(
                 children: [
+                  Consumer<HomeScreenProvider>(
+                    builder: (context, provider, child) {
+                      return Container(
+                        height: 65,
+                        color: const Color(0xffFFF2F9),
+                        child: Row(
+                          children: [
+                            if (provider.isSearching == false)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: AppTextStyle(
+                                    textName: 'Small Biz Social',
+                                    textColor: primaryTextColor,
+                                    textSize: 28,
+                                    textWeight: FontWeight.w500),
+                              ),
+                            if (provider.isSearching == false) const Spacer(),
+                            if (provider.isSearching == false)
+                              InkWell(
+                                onTap: () {
+                                  provider.searching(true);
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 38,
+                                  width: 38,
+                                  decoration: const BoxDecoration(
+                                      color: buttonColor,
+                                      shape: BoxShape.circle),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/search_icon.svg',
+                                    height: 15,
+                                    width: 15,
+                                    // ignore: deprecated_member_use
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            if (provider.isSearching == true)
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SearchField(
+                                  searchController: searchController,
+                                  onChanged: (searchValue) {
+                                    if (searchValue.isNotEmpty) {
+                                      provider.searching(true);
+                                      provider.searchList.clear();
+                                      for (var i in provider.getPostList) {
+                                        if (i.postTitle
+                                                .toLowerCase()
+                                                .trim()
+                                                .contains(searchValue
+                                                    .toLowerCase()
+                                                    .trim()) ||
+                                            i.description
+                                                .toLowerCase()
+                                                .trim()
+                                                .contains(searchValue
+                                                    .toLowerCase()
+                                                    .trim()) ||
+                                            i.username
+                                                .toLowerCase()
+                                                .trim()
+                                                .contains(searchValue
+                                                    .toLowerCase()
+                                                    .trim())) {
+                                          provider.searchList.add(i);
+                                        }
+                                      }
+                                    } else {
+                                      provider.searching(false);
+                                      provider.searchList.clear();
+                                    }
+                                  },
+                                ),
+                              )),
+                            const ProfileAvatar(),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                   Container(
-                    height: 65,
-                    color: const Color(0xffFFF2F9),
+                    color: const Color(0xffFFD2D4),
                     child: Row(
                       children: [
                         Expanded(
                             child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: SearchField(
-                            searchController: searchController,
-                            onChanged: (searchValue) {
-                              if (searchValue.isNotEmpty) {
-                                provider.searching(true);
-                                provider.searchList.clear();
-                                for (var i in provider.getPostList) {
-                                  if (i.postTitle.toLowerCase().trim().contains(
-                                          searchValue.toLowerCase().trim()) ||
-                                      i.description
-                                          .toLowerCase()
-                                          .trim()
-                                          .contains(searchValue
-                                              .toLowerCase()
-                                              .trim()) ||
-                                      i.username.toLowerCase().trim().contains(
-                                          searchValue.toLowerCase().trim())) {
-                                    provider.searchList.add(i);
-                                  }
-                                }
-                              } else {
-                                provider.searching(false);
-                                provider.searchList.clear();
-                              }
-                            },
+                          child: SizedBox(
+                            height: 46,
+                            child: TextFormField(
+                              controller: postController,
+                              onFieldSubmitted: (value) {
+                                debugPrint('on field Submit $value');
+                                if (value.isEmpty) return;
+                                postController.text = value;
+                                Apis.createPost(Apis.userDetail.firstName,
+                                        value, PostType.text, value)
+                                    .then((value) {
+                                  provider.refreshPostList();
+                                  postController.clear();
+                                });
+                              },
+                              style: GoogleFonts.dmSans(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400),
+                              decoration: InputDecoration(
+                                  suffixIcon: const Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: PopupMenuCreatePost(),
+                                  ),
+                                  contentPadding: const EdgeInsets.all(10),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  hintText: 'Create a post',
+                                  hintStyle: GoogleFonts.dmSans(
+                                    fontSize: 10,
+                                    color: primaryTextColor,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: BorderSide.none)),
+                            ),
                           ),
                         )),
-                        const ProfileAvatar(),
                       ],
                     ),
                   ),
-                  if (provider.isSearching == false)
-                    Container(
-                      color: const Color(0xffFFD2D4),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CachedNetworkImage(
-                              imageUrl: Apis.userDetail.profilePicture,
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                height: 45,
-                                width: 45,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) =>
-                                      const AvatarLoading(
-                                radius: 22,
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.person),
-                            ),
-                          ),
-                          Expanded(
-                              child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              height: 40,
-                              child: TextFormField(
-                                controller: postController,
-                                onFieldSubmitted: (value) {
-                                  debugPrint('on field Submit $value');
-                                  if (value.isEmpty) return;
-                                  postController.text = value;
-                                  Apis.createPost(Apis.userDetail.firstName,
-                                          value, PostType.text, value)
-                                      .then((value) {
-                                    provider.refreshPostList();
-                                    postController.clear();
-                                  });
-                                },
-                                style: GoogleFonts.dmSans(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400),
-                                decoration: InputDecoration(
-                                    suffixIcon: const Padding(
-                                      padding: EdgeInsets.all(5),
-                                      child: PopupMenuCreatePost(),
-                                    ),
-                                    contentPadding: const EdgeInsets.all(10),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    hintText: 'Create a post',
-                                    hintStyle: GoogleFonts.dmSans(
-                                      fontSize: 10,
-                                      color: primaryTextColor,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                        borderSide: BorderSide.none)),
-                              ),
-                            ),
-                          )),
-                        ],
-                      ),
-                    ),
                   Consumer<CreatePostScreenProvider>(
                     builder: (context, createPostProvider, child) {
                       return createPostProvider.isUploading
