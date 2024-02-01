@@ -9,7 +9,7 @@
 
     
     <application
-        android:label="smallbiz"
+        android:label="SmallBizSocial"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

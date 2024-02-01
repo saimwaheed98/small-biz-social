@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:889632764652:android:53153a7bab1a2a2dc82bc9",
+        "mobilesdk_app_id": "1:889632764652:android:fc1fb1e4dd778cf7c82bc9",
         "android_client_info": {
-          "package_name": "com.smartbiz.smartbiz"
+          "package_name": "com.social.smallbizsocial"
         }
       },
       "oauth_client": [],

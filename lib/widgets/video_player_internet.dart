@@ -4,7 +4,7 @@ import 'package:smallbiz/models/chat_model.dart';
 import 'package:smallbiz/models/post_model.dart';
 import 'package:smallbiz/providers/bool_function_proider.dart';
 import 'package:smallbiz/utils/colors.dart';
-import 'package:cached_video_player/cached_video_player.dart';
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final MessageModel? data;
@@ -17,14 +17,14 @@ class VideoPlayerItem extends StatefulWidget {
 
 class _VideoPlayerItemState extends State<VideoPlayerItem>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  late CachedVideoPlayerController _controller;
+  late CachedVideoPlayerPlusController _controller;
   late AnimationController _animationController;
   bool _isPlaying = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = CachedVideoPlayerController.network(
+    _controller = CachedVideoPlayerPlusController.network(
         widget.data?.message ?? widget.postData!.postData)
       ..initialize().then((_) {
         setState(() {});
@@ -102,7 +102,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem>
           child: AspectRatio(
             aspectRatio: 16 / 9,
             child: _controller.value.isInitialized
-                ? CachedVideoPlayer(_controller)
+                ? CachedVideoPlayerPlus(_controller)
                 : const Center(
                     child: CircularProgressIndicator(),
                   ),

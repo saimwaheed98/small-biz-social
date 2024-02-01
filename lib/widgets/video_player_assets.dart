@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:smallbiz/utils/colors.dart';
-import 'package:cached_video_player/cached_video_player.dart';
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final File videoData;
@@ -13,14 +13,14 @@ class VideoPlayerItem extends StatefulWidget {
 
 class _VideoPlayerItemState extends State<VideoPlayerItem>
     with SingleTickerProviderStateMixin {
-  late CachedVideoPlayerController _controller;
+  late CachedVideoPlayerPlusController _controller;
   late AnimationController _animationController;
   bool _isPlaying = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = CachedVideoPlayerController.file(widget.videoData)
+    _controller = CachedVideoPlayerPlusController.file(widget.videoData)
       ..initialize().then((_) {
         setState(() {});
       });
@@ -74,7 +74,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem>
           child: AspectRatio(
             aspectRatio: 16 / 9,
             child: _controller.value.isInitialized
-                ? CachedVideoPlayer(_controller)
+                ? CachedVideoPlayerPlus(_controller)
                 : const Center(
                     child: CircularProgressIndicator(),
                   ),

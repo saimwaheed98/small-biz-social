@@ -1,4 +1,4 @@
-package com.smartbiz.smartbiz
+package com.social.smallbizsocial
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity

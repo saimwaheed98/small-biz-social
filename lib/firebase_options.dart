@@ -48,17 +48,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyAmZlbbMEsvhk-A2uKETcqfTTGIgCwDDnw',
-    appId: '1:889632764652:web:d268547aecf7185bc82bc9',
+    appId: '1:889632764652:web:699cdd5c853183fcc82bc9',
     messagingSenderId: '889632764652',
     projectId: 'small-biz-social-30ff3',
     authDomain: 'small-biz-social-30ff3.firebaseapp.com',
     storageBucket: 'small-biz-social-30ff3.appspot.com',
-    measurementId: 'G-10XMS6WT4S',
+    measurementId: 'G-7RR2TC03CC',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD1vmoovh3EyYcomBqVBQzIWkXJ7wm4ruc',
-    appId: '1:889632764652:android:53153a7bab1a2a2dc82bc9',
+    appId: '1:889632764652:android:fc1fb1e4dd778cf7c82bc9',
     messagingSenderId: '889632764652',
     projectId: 'small-biz-social-30ff3',
     storageBucket: 'small-biz-social-30ff3.appspot.com',
@@ -66,10 +66,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA5apP6MRc2t1AIwLyRYCCoxDy1Y0nVj1c',
-    appId: '1:889632764652:ios:66f97485034fcbd5c82bc9',
+    appId: '1:889632764652:ios:4770878317dcf77ec82bc9',
     messagingSenderId: '889632764652',
     projectId: 'small-biz-social-30ff3',
     storageBucket: 'small-biz-social-30ff3.appspot.com',
-    iosBundleId: 'com.smartbiz.smartbiz',
+    iosBundleId: 'com.social.smallbizsocial',
   );
 }
