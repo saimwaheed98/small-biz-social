@@ -8,14 +8,19 @@ import 'package:smallbiz/screens/create_account/provider/profile_picture_provide
 import 'package:smallbiz/screens/subscription_setup/ui/subscription_setup_screen.dart';
 import 'package:smallbiz/utils/colors.dart';
 import 'package:smallbiz/widgets/gesture_container.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileImage extends StatelessWidget {
   final File image;
-  const ProfileImage({
+  ProfileImage({
     super.key,
     required this.image,
   });
   static const routeName = '/profile-image';
+  final Uri _termsUrl = Uri.parse(
+      'https://firebasestorage.googleapis.com/v0/b/small-biz-social-30ff3.appspot.com/o/Terms.pdf?alt=media&token=c8b6546b-0e43-4792-ae89-722fe41fc8ce');
+  final Uri _privacyUrl = Uri.parse(
+      'https://firebasestorage.googleapis.com/v0/b/small-biz-social-30ff3.appspot.com/o/Privacy%20Policy.pdf?alt=media&token=d42e769f-3efd-40a9-b435-93974d6bcb29');
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +55,7 @@ class ProfileImage extends StatelessWidget {
                       height: 5,
                     ),
                     const AppTextStyle(
-                        textName:
-                            'Please upload a new profile pic',
+                        textName: 'Please upload a new profile pic',
                         textColor: primaryTextColor,
                         textSize: 12,
                         textWeight: FontWeight.w400),
@@ -136,8 +140,7 @@ class ProfileImage extends StatelessWidget {
                                     color: Colors.blue, fontSize: 11),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    // Action when 'Terms' is tapped
-                                    // Add your logic here
+                                    _launchUrl(_termsUrl);
                                   },
                               ),
                               TextSpan(
@@ -151,8 +154,7 @@ class ProfileImage extends StatelessWidget {
                                     color: Colors.blue, fontSize: 11),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    // Action when 'Privacy' is tapped
-                                    // Add your logic here
+                                    _launchUrl(_privacyUrl);
                                   },
                               ),
                             ],
@@ -185,5 +187,11 @@ class ProfileImage extends StatelessWidget {
             ],
           ),
         ));
+  }
+
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

@@ -126,7 +126,7 @@ class MyApp extends StatelessWidget {
         PostScreen.routeName: (context) => PostScreen(),
         CreateAccount.routeName: (context) => CreateAccount(),
         ProfilePicture.routeName: (context) => const ProfilePicture(),
-        SubscriptionSetup.routename: (context) => const SubscriptionSetup(),
+        SubscriptionSetup.routename: (context) => SubscriptionSetup(),
         SubscriptionFee.routeName: (context) => SubscriptionFee(),
         ProfilePercentage.routeName: (context) => const ProfilePercentage(),
       },

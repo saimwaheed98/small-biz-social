@@ -181,7 +181,6 @@ class ChatScreenProvider extends ChangeNotifier {
       setVideo(File(pickedFile.path));
       notifyListeners();
       // await uploadVideoToFirebase(video, user, group);
-      notifyListeners();
     } else {
       return;
     }

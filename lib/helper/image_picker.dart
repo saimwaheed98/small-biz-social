@@ -4,9 +4,7 @@ import 'package:image_picker/image_picker.dart';
 
 class ImagePickerProvider extends ChangeNotifier {
   File? _image;
-
   File? get image => _image;
-
   final _picker = ImagePicker();
 
   void setImage(File? newImage) {

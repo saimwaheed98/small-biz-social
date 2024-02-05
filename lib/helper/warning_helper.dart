@@ -32,12 +32,18 @@ class WarningHelper {
     showDialog(
         context: context,
         builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: buttonColor,
-              backgroundColor: white,
-              strokeWidth: 3,
-            ),
+          return const Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: CircularProgressIndicator(
+                  color: buttonColor,
+                  backgroundColor: white,
+                  strokeWidth: 3,
+                ),
+              ),
+            ],
           );
         });
   }

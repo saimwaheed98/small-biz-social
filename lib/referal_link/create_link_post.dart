@@ -15,8 +15,12 @@ class DeepLinkPostService {
       link:
           Uri.parse('https://smallbizsocial.page.link?post=${postData.postId}'),
       androidParameters: const AndroidParameters(
-        packageName: 'com.smartbiz.smartbiz',
+        packageName: 'com.social.smallbizsocial',
         minimumVersion: 1,
+      ),
+      iosParameters: const IOSParameters(
+        bundleId: 'com.social.smallbizsocial',
+        minimumVersion: '1',
       ),
       socialMetaTagParameters: SocialMetaTagParameters(
         title: postData.profileImage,

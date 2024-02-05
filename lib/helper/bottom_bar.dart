@@ -22,11 +22,12 @@ class BottomBar extends StatelessWidget {
   List<Widget> _buildScreens() => [
         HomeScreen(),
         const ChatRoomScreen(),
-        const SubscriptionSetup(isNewUser: false),
+        SubscriptionSetup(isNewUser: false),
         const NotificationScreen(),
         UserChat(),
         UserProfile(
           isUser: true,
+          isNeedBackButton: false,
         )
       ];
 

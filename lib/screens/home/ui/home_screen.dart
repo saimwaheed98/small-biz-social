@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
 import 'package:smallbiz/helper/alert_dialouge.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
@@ -12,6 +13,7 @@ import 'package:smallbiz/screens/home/home_screen_widgets/post_container_des.dar
 import 'package:smallbiz/screens/home/home_screen_widgets/search_form_field.dart';
 import 'package:smallbiz/screens/home/provider/create_post_screen_provider.dart';
 import 'package:smallbiz/screens/home/provider/home_screen_provider.dart';
+import 'package:smallbiz/screens/home/ui/post_screen.dart';
 import 'package:smallbiz/screens/splash_screen/providers/splash_screen_provider.dart';
 import 'package:smallbiz/screens/users_chat/provider/chat_screen_provider.dart';
 import 'package:smallbiz/utils/colors.dart';
@@ -317,11 +319,19 @@ class HomeScreen extends StatelessWidget {
                             if (index == postProvider.getPostList.length - 1) {
                               postProvider.get10PostsAtEach();
                             }
-                            return PostContainer(
-                              data: provider.isSearching
-                                  ? provider.searchList[index]
-                                  : postProvider.getPostList[index],
-                              isHomeScreen: true,
+                            return InkWell(
+                              onTap: () {
+                                PersistentNavBarNavigator.pushNewScreen(context,
+                                    screen: PostScreen(
+                                      data: postProvider.getPostList[index],
+                                    ));
+                              },
+                              child: PostContainer(
+                                data: provider.isSearching
+                                    ? provider.searchList[index]
+                                    : postProvider.getPostList[index],
+                                isHomeScreen: true,
+                              ),
                             );
                           },
                         ),

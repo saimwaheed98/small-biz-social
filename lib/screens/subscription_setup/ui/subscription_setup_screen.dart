@@ -12,16 +12,21 @@ import 'package:smallbiz/screens/subscription_setup/provider/subscription_setup.
 import 'package:smallbiz/utils/colors.dart';
 import 'package:smallbiz/widgets/gesture_container.dart';
 import 'package:smallbiz/widgets/text_field.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SubscriptionSetup extends StatelessWidget {
-  const SubscriptionSetup({super.key, this.isNewUser = true});
+  SubscriptionSetup({super.key, this.isNewUser = true});
   final bool isNewUser;
 
   static const routename = "/subscription-setup";
+  final Uri _termsUrl = Uri.parse(
+      'https://firebasestorage.googleapis.com/v0/b/small-biz-social-30ff3.appspot.com/o/Terms.pdf?alt=media&token=c8b6546b-0e43-4792-ae89-722fe41fc8ce');
+  final Uri _privacyUrl = Uri.parse(
+      'https://firebasestorage.googleapis.com/v0/b/small-biz-social-30ff3.appspot.com/o/Privacy%20Policy.pdf?alt=media&token=d42e769f-3efd-40a9-b435-93974d6bcb29');
+
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<PaymentController>(context, listen: false);
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -257,8 +262,7 @@ class SubscriptionSetup extends StatelessWidget {
                                                   fontSize: 11),
                                               recognizer: TapGestureRecognizer()
                                                 ..onTap = () {
-                                                  // Action when 'Terms' is tapped
-                                                  // Add your logic here
+                                                  _launchUrl(_termsUrl);
                                                 },
                                             ),
                                             TextSpan(
@@ -274,8 +278,7 @@ class SubscriptionSetup extends StatelessWidget {
                                                   fontSize: 11),
                                               recognizer: TapGestureRecognizer()
                                                 ..onTap = () {
-                                                  // Action when 'Privacy' is tapped
-                                                  // Add your logic here
+                                                  _launchUrl(_privacyUrl);
                                                 },
                                             ),
                                           ],
@@ -382,5 +385,11 @@ class SubscriptionSetup extends StatelessWidget {
             ),
           )),
     );
+  }
+
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

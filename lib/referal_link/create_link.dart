@@ -2,6 +2,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
+import 'package:smallbiz/helper/warning_helper.dart';
 import 'package:smallbiz/models/user_detail_model.dart';
 import 'package:smallbiz/screens/user_profile/ui/user_profile_screen.dart';
 
@@ -13,7 +14,13 @@ class DeepLinkService with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> createReferLink(String profileCode) async {
+  checkLoading(context) {
+    if (isLoading) {
+      WarningHelper.showProgressDialog(context);
+    }
+  }
+
+  Future<String> createReferLink(String profileCode, context) async {
     FirebaseDynamicLinks links = FirebaseDynamicLinks.instance;
     try {
       setLoading(true);
@@ -22,11 +29,11 @@ class DeepLinkService with ChangeNotifier {
         link:
             Uri.parse('https://smallbizsocial.page.link?profile=$profileCode'),
         androidParameters: const AndroidParameters(
-          packageName: 'com.smartbiz.smartbiz',
+          packageName: 'com.social.smallbizsocial',
           minimumVersion: 1,
         ),
         iosParameters: const IOSParameters(
-          bundleId: 'com.smartbiz.smartbiz',
+          bundleId: 'com.social.smallbizsocial',
           minimumVersion: '1',
         ),
         socialMetaTagParameters: SocialMetaTagParameters(
@@ -37,13 +44,15 @@ class DeepLinkService with ChangeNotifier {
               'https://firebasestorage.googleapis.com/v0/b/small-biz-social-30ff3.appspot.com/o/playstore.png?alt=media&token=0b61b022-ae09-458b-a616-8751924fce07'),
         ),
       );
-
       final shortLink = await links.buildShortLink(dynamicLinkParameters);
+      setLoading(false);
       return shortLink.shortUrl.toString();
     } catch (e) {
       setLoading(false);
       debugPrint('Error: $e');
       return '';
+    } finally {
+      setLoading(false);
     }
   }
 

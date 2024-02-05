@@ -29,11 +29,13 @@ class UserProfile extends StatelessWidget {
   final bool isUser;
   final PostModel? postData;
   final PostCommentModel? commentData;
+  final bool? isNeedBackButton;
   UserProfile(
       {super.key,
       this.user,
       this.isUser = true,
       this.postData,
+      this.isNeedBackButton = true,
       this.commentData});
 
   final List<PostModel> postList = [];
@@ -42,29 +44,29 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var linkProvider = Provider.of<DeepLinkService>(context);
     Provider.of<ChatScreenProvider>(context, listen: false)
         .checkUserOnlineStatus();
     return Scaffold(
       backgroundColor: scaffoldColor,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: white,
-        title: const AppTextStyle(
-            textName: 'Profile',
-            textColor: black,
-            textSize: 16,
-            textWeight: FontWeight.w600),
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_outlined,
-              color: Color(0xff610030),
-            )),
-      ),
+          elevation: 0,
+          backgroundColor: white,
+          title: const AppTextStyle(
+              textName: 'Profile',
+              textColor: black,
+              textSize: 16,
+              textWeight: FontWeight.w600),
+          centerTitle: true,
+          leading: isNeedBackButton == true
+              ? IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_outlined,
+                    color: Color(0xff610030),
+                  ))
+              : null),
       body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
@@ -199,42 +201,62 @@ class UserProfile extends StatelessWidget {
                                     )),
                               ),
                             ),
-                          InkWell(
-                            onTap: () {
-                              WarningHelper.showProgressDialog(context);
-                              linkProvider
-                                  .createReferLink(
-                                isUser == true
-                                    ? Apis.userDetail.uid
-                                    : user?.uid ??
-                                        postData?.uid ??
-                                        commentData?.fromId ??
-                                        '',
-                              )
-                                  .then((value) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return ShowQrDialouge(
-                                      qrData: value,
-                                      user: user,
-                                      isUser: isUser,
-                                      postData: postData,
-                                      commentData: commentData,
-                                    );
-                                  },
-                                );
-                              });
-                            },
-                            child: Container(
-                                height: 40,
-                                width: 70,
-                                padding: const EdgeInsets.all(7),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: buttonColor),
-                                child: Image.asset(Images.shareImage)),
-                          )
+                          Consumer<DeepLinkService>(
+                              builder: (context, provider, child) {
+                            return InkWell(
+                              onTap: () {
+                                provider
+                                    .createReferLink(
+                                        isUser == true
+                                            ? Apis.userDetail.uid
+                                            : user?.uid ??
+                                                postData?.uid ??
+                                                commentData?.fromId ??
+                                                '',
+                                        context)
+                                    .then((value) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return ShowQrDialouge(
+                                        qrData: value,
+                                        user: user,
+                                        isUser: isUser,
+                                        postData: postData,
+                                        commentData: commentData,
+                                      );
+                                    },
+                                  );
+                                });
+                              },
+                              child: Container(
+                                  height: 40,
+                                  width: 70,
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: buttonColor),
+                                  child: provider.isLoading
+                                      ? const Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              height: 25,
+                                              width: 25,
+                                              child: CircularProgressIndicator(
+                                                backgroundColor: white,
+                                                color: scaffoldColor,
+                                                strokeWidth: 2,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Image.asset(Images.shareImage)),
+                            );
+                          })
                         ],
                       ),
                     ),

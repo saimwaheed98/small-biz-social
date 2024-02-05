@@ -318,7 +318,7 @@ class Apis {
   }
 
   // //send chat image
-  // static Future<void> sendChatImage(
+  // static Future<String> sendChatImage(
   //     UserDetail? chatUser, GroupChatModel? group, File file) async {
   //   //getting image file extension
   //   final ext = file.path.split('.').last;
@@ -330,13 +330,14 @@ class Apis {
   //   //uploading image
   //   await ref
   //       .putFile(file, SettableMetadata(contentType: 'image/$ext'))
-  //       .then((p0) {
-  //     log('Data Transferred: ${p0.bytesTransferred / 1000} kb');
+  //       .then((loadingValue) {
+  //     log('Data Transferred: ${loadingValue.bytesTransferred / 1000} kb');
   //   });
 
   //   //updating image in firestore database
   //   final imageUrl = await ref.getDownloadURL();
-  //   await sendMessage(chatUser, group, ,imageUrl, Type.image);
+  //   return imageUrl;
+  //   // await sendMessage(chatUser, group, ,imageUrl, Type.image);
   // }
 
   //delete message
@@ -555,7 +556,6 @@ class Apis {
         .doc(postId)
         .collection('comments')
         .get();
-
     return querySnapshot.size; // This will give you the number of comments
   }
 

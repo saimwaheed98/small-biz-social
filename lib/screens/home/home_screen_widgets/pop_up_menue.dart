@@ -82,7 +82,7 @@ class _PopupMenuCreatePost extends State<PopupMenuCreatePost> {
             ),
             onTap: () {
               PersistentNavBarNavigator.pushNewScreen(context,
-                  screen: const SubscriptionSetup(isNewUser: false),
+                  screen: SubscriptionSetup(isNewUser: false),
                   withNavBar: false);
             },
           ),
