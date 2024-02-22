@@ -215,47 +215,54 @@ class ProfileSetting extends StatelessWidget {
                           controller: provider.controller,
                           canEdit: false,
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: AppTextStyle(
-                              textName: 'Subscription Start Date',
-                              textColor: primaryTextColor,
-                              textSize: 18,
-                              textWeight: FontWeight.bold),
-                        ),
+                        if (provider.subscriptionStartDate != null)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: AppTextStyle(
+                                textName: 'Subscription Start Date',
+                                textColor: primaryTextColor,
+                                textSize: 18,
+                                textWeight: FontWeight.bold),
+                          ),
                         const SizedBox(
                           height: 5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: AppTextStyle(
-                              textName:
-                                  '${provider.subscriptionStartDate?.day}/ ${provider.subscriptionStartDate?.month}/ ${provider.subscriptionStartDate?.year}',
-                              textColor: primaryTextColor,
-                              textSize: 16,
-                              textWeight: FontWeight.w500),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: AppTextStyle(
-                              textName: 'Subscription Ending Date',
-                              textColor: primaryTextColor,
-                              textSize: 18,
-                              textWeight: FontWeight.bold),
-                        ),
+                        if (provider.subscriptionStartDate != null)
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: AppTextStyle(
+                                textName:
+                                    '${provider.subscriptionStartDate?.day}/ ${provider.subscriptionStartDate?.month}/ ${provider.subscriptionStartDate?.year}',
+                                textColor: primaryTextColor,
+                                textSize: 16,
+                                textWeight: FontWeight.w500),
+                          ),
+                        if (provider.subscriptionStartDate != null)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: AppTextStyle(
+                                textName: 'Subscription Ending Date',
+                                textColor: primaryTextColor,
+                                textSize: 18,
+                                textWeight: FontWeight.bold),
+                          ),
                         const SizedBox(
                           height: 5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: AppTextStyle(
-                              textName: '${provider.subscriptionEndDate?.day}/ '
-                                  '${provider.subscriptionEndDate?.month}/ '
-                                  '${provider.subscriptionEndDate?.year}',
-                              textColor: primaryTextColor,
-                              textSize: 16,
-                              textWeight: FontWeight.w500),
-                        ),
+                        if (provider.subscriptionStartDate != null)
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: AppTextStyle(
+                                textName:
+                                    '${provider.subscriptionEndDate?.day}/ '
+                                    '${provider.subscriptionEndDate?.month}/ '
+                                    '${provider.subscriptionEndDate?.year}',
+                                textColor: primaryTextColor,
+                                textSize: 16,
+                                textWeight: FontWeight.w500),
+                          ),
                       ],
                     ),
                   ),
@@ -272,8 +279,6 @@ class ProfileSetting extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                // Inside the build method or the widget tree
-// Wrap the 'Consumer' with a 'Visibility' widget to conditionally show/hide the button
                 Consumer<ProfileSettingProvider>(
                   builder: (context, provider, child) {
                     return Padding(

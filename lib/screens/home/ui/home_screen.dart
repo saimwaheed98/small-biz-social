@@ -33,8 +33,7 @@ class HomeScreen extends StatelessWidget {
     var provider = Provider.of<HomeScreenProvider>(context, listen: false);
     provider.initialize();
     // check if the user come from link
-    Provider.of<HomeScreenProvider>(context, listen: false)
-        .checkUserLink(context);
+    provider.checkUserLink(context);
     // navigator key for navigation
     final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
     // check if the user is connected to the internet

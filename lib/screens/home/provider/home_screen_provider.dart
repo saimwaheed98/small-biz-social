@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:smallbiz/helper/alert_dialouge.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
 import 'package:smallbiz/helper/images_strings.dart';
+import 'package:smallbiz/helper/warning_helper.dart';
 import 'dart:async';
 
 import 'package:smallbiz/models/post_model.dart';
@@ -12,18 +13,30 @@ import 'package:smallbiz/referal_link/create_link_post.dart';
 import 'package:smallbiz/screens/subscription_setup/ui/subscription_setup_screen.dart';
 
 class HomeScreenProvider extends ChangeNotifier {
+  bool _isSubscribed = false;
+  bool get isSubscribed => _isSubscribed;
+
+  void isSubscribedValue(bool value) {
+    _isSubscribed = value;
+    notifyListeners();
+  }
+
   // check if the user come from link
   checkUserLink(context) {
-    DeepLinkService().initDynamicLinks(context);
-    DeepLinkPostService().initDynamicLinks(context);
-    checkSubscription().then((value) {
-      if (value == true) {
-        debugPrint('subscription value $value');
-      } else {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return Dialouge(
+    if (!_isSubscribed) {
+      // Check if subscription is not checked already
+      isSubscribedValue(
+          true); // Set flag to true to indicate subscription check performed
+      DeepLinkService().initDynamicLinks(context);
+      DeepLinkPostService().initDynamicLinks(context);
+      checkSubscription().then((value) {
+        if (value == true) {
+          debugPrint('subscription value $value');
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Dialouge(
                 buttonText: 'Subscribe',
                 details:
                     'Please Subscribe Small Biz Socail to Create Post easily',
@@ -31,11 +44,13 @@ class HomeScreenProvider extends ChangeNotifier {
                 message: 'Oopps!',
                 onPressed: () {
                   Navigator.of(context).pushNamed(SubscriptionSetup.routename);
-                });
-          },
-        );
-      }
-    });
+                },
+              );
+            },
+          );
+        }
+      });
+    }
   }
 
   // check if the post is being searched
@@ -173,24 +188,28 @@ class HomeScreenProvider extends ChangeNotifier {
   Future<void> get10PostsAtEach() async {
     Query query = Apis.firestore.collection('posts').limit(10);
 
-    // If we have a last document, start after it.
-    if (lastDocument != null) {
-      query = query.startAfterDocument(lastDocument!);
-    }
+    try {
+      // If we have a last document, start after it.
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!);
+      }
 
-    final querySnapshot = await query.get();
+      final querySnapshot = await query.get();
 
-    // If there are no documents, we are done.
-    if (querySnapshot.docs.isEmpty) {
-      return;
-    }
+      // If there are no documents, we are done.
+      if (querySnapshot.docs.isEmpty) {
+        return;
+      }
 
-    // Remember the last document for the next query.
-    lastDocument = querySnapshot.docs.last;
+      // Remember the last document for the next query.
+      lastDocument = querySnapshot.docs.last;
 
-    for (final doc in querySnapshot.docs) {
-      // _postList.add(PostModel.fromJson(doc.data() as Map<String, dynamic>));
-      getPost(PostModel.fromJson(doc.data() as Map<String, dynamic>));
+      for (final doc in querySnapshot.docs) {
+        // _postList.add(PostModel.fromJson(doc.data() as Map<String, dynamic>));
+        getPost(PostModel.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    } catch (e) {
+      WarningHelper.toastMessage('Error fetching posts: ${e.toString()}');
     }
   }
 }
