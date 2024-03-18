@@ -24,7 +24,7 @@ class ProfileSettingTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 16, bottom: 16),
       child: SizedBox(
         height: 43,
         child: TextFormField(

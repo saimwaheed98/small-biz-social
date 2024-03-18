@@ -148,4 +148,19 @@ class ProfileSettingProvider extends ChangeNotifier {
       notifyListeners(); // notify the listeners
     }
   }
+
+  // make the details of the user null
+  Future<void> cleanValues() async {
+    Apis.userDetail.bio = '';
+    Apis.userDetail.firstName = '';
+    Apis.userDetail.lastName = '';
+    Apis.userDetail.profilePicture = '';
+    Apis.userDetail.subscription = false;
+    Apis.userDetail.createdAt = '';
+    Apis.userDetail.email = '';
+    Apis.userDetail.pushToken = '';
+    Apis.userDetail.uid = '';
+    _subscriptionEndDate = null;
+    _subscriptionStartDate = null;
+  }
 }

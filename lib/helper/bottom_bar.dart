@@ -12,13 +12,20 @@ import 'package:smallbiz/screens/user_profile/ui/user_profile_screen.dart';
 import 'package:smallbiz/screens/users_chat/ui/user_chat_screen.dart';
 import 'package:smallbiz/utils/colors.dart';
 
-class BottomBar extends StatelessWidget {
+import '../screens/home/provider/home_screen_provider.dart';
+
+class BottomBar extends StatefulWidget {
   const BottomBar({
     Key? key,
   }) : super(key: key);
 
   static const routename = '/bottom-bar';
 
+  @override
+  State<BottomBar> createState() => _BottomBarState();
+}
+
+class _BottomBarState extends State<BottomBar> {
   List<Widget> _buildScreens() => [
         HomeScreen(),
         const ChatRoomScreen(),
@@ -126,6 +133,16 @@ class BottomBar extends StatelessWidget {
           inactiveColorPrimary: Colors.black,
           activeColorSecondary: buttonColor),
     ];
+  }
+
+  @override
+  void initState() {
+    Provider.of<HomeScreenProvider>(context, listen: false).initialize();
+    Provider.of<HomeScreenProvider>(context, listen: false)
+        .checkUserLink(context);
+    Provider.of<HomeScreenProvider>(context, listen: false)
+        .checkSubscribed(context);
+    super.initState();
   }
 
   @override

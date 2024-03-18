@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smallbiz/helper/text_style.dart';
+import 'package:smallbiz/screens/create_account/provider/create_account_providers.dart';
 import 'package:smallbiz/screens/create_account/ui/create_account_screen.dart';
 import 'package:smallbiz/screens/sign_in/provider/sign_in_screen_provider.dart';
 import 'package:smallbiz/utils/colors.dart';
@@ -73,10 +74,12 @@ class SignInScreen extends StatelessWidget {
                                     return null;
                                   },
                                 ),
-                                FieldText(
+                                Consumer<CreateAccountProviders>(
+                                    builder: (context, provider, child) {
+                                  return FieldText(
                                     controller:
                                         signinProvider.passwordController,
-                                    obscureText: true,
+                                    obscureText: provider.isObscure,
                                     labelText: 'Create new password',
                                     errorText: 'Please enter a password',
                                     keyBoardType: TextInputType.visiblePassword,
@@ -85,7 +88,20 @@ class SignInScreen extends StatelessWidget {
                                         return 'Please enter your password';
                                       }
                                       return null;
-                                    }),
+                                    },
+                                    suffixIxon: IconButton(
+                                        onPressed: () {
+                                          provider.toggleObscure();
+                                        },
+                                        icon: Icon(
+                                          provider.isObscure
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          color: buttonColor,
+                                          size: 15,
+                                        )),
+                                  );
+                                }),
                               ],
                             ),
                           );

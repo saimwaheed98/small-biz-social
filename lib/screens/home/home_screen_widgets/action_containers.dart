@@ -8,7 +8,8 @@ import 'package:smallbiz/utils/colors.dart';
 
 class LikeButton extends StatefulWidget {
   final PostModel data;
-  const LikeButton({super.key, required this.data});
+  final int index;
+  const LikeButton({super.key, required this.data, required this.index});
 
   @override
   State<LikeButton> createState() => _FavoriteButtonState();
@@ -57,10 +58,10 @@ class _FavoriteButtonState extends State<LikeButton>
   @override
   Widget build(BuildContext context) {
     bool isContain = widget.data.likes.contains(Apis.user.uid);
-    var homeProvider = Provider.of<HomeScreenProvider>(context);
+    var homeProvider = Provider.of<HomeScreenProvider>(context, listen: false);
     return InkWell(
       onTap: () async {
-        homeProvider.refreshPostList();
+        homeProvider.updatePostLikes(widget.data, widget.index);
         await Apis.likePost(widget.data.postId, widget.data.likes, context);
         isFav ? controller!.reverse() : controller!.forward();
       },
@@ -102,7 +103,8 @@ class _FavoriteButtonState extends State<LikeButton>
 
 class StarButton extends StatefulWidget {
   final PostModel data;
-  const StarButton({super.key, required this.data});
+  final int index;
+  const StarButton({super.key, required this.data, required this.index});
 
   @override
   State<StarButton> createState() => _StarButtonState();
@@ -151,10 +153,10 @@ class _StarButtonState extends State<StarButton>
   @override
   Widget build(BuildContext context) {
     bool isContain = widget.data.stars.contains(Apis.user.uid);
-    var homeProvider = Provider.of<HomeScreenProvider>(context);
+    var homeProvider = Provider.of<HomeScreenProvider>(context, listen: false);
     return InkWell(
       onTap: () {
-        homeProvider.refreshPostList();
+        homeProvider.updatePostStars(widget.data, widget.index);
         Apis.starPost(widget.data.postId, widget.data.stars, context);
         isFav ? controller!.reverse() : controller!.forward();
       },

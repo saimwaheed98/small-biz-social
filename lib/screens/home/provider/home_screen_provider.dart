@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:smallbiz/helper/alert_dialouge.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
@@ -21,18 +22,21 @@ class HomeScreenProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> checkUserLink(BuildContext context) async {
+    DeepLinkService().initDynamicLinks(context);
+    DeepLinkPostService().initDynamicLinks(context);
+  }
+
   // check if the user come from link
-  checkUserLink(context) {
-    if (!_isSubscribed) {
-      // Check if subscription is not checked already
-      isSubscribedValue(
-          true); // Set flag to true to indicate subscription check performed
-      DeepLinkService().initDynamicLinks(context);
-      DeepLinkPostService().initDynamicLinks(context);
-      checkSubscription().then((value) {
-        if (value == true) {
-          debugPrint('subscription value $value');
-        } else {
+  Future<void> checkSubscribed(BuildContext context) async {
+    // if (!_isSubscribed) {
+    // isSubscribedValue(true);
+    await checkSubscription().then((value) {
+      if (value == true) {
+        debugPrint('subscription value $value');
+      } else {
+        // Use addPostFrameCallback to defer the execution of notifyListeners
+        SchedulerBinding.instance.addPostFrameCallback((_) {
           showDialog(
             context: context,
             builder: (context) {
@@ -43,14 +47,20 @@ class HomeScreenProvider extends ChangeNotifier {
                 image: Images.sadImage,
                 message: 'Oopps!',
                 onPressed: () {
-                  Navigator.of(context).pushNamed(SubscriptionSetup.routename);
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return SubscriptionSetup(
+                      isNewUser: false,
+                    );
+                  }));
                 },
               );
             },
           );
-        }
-      });
-    }
+        });
+      }
+    });
+    // }
   }
 
   // check if the post is being searched
@@ -73,6 +83,30 @@ class HomeScreenProvider extends ChangeNotifier {
   void removePost(PostModel postModel) {
     _postList.removeAt(_postList.indexOf(postModel));
     notifyListeners();
+  }
+
+  void updatePostLikes(PostModel postModel, int index) {
+    if (index >= 0 && index < _postList.length) {
+      if (_postList[index].likes.contains(Apis.userDetail.uid)) {
+        _postList[index].likes.remove(Apis.userDetail.uid);
+        notifyListeners();
+      } else {
+        _postList[index].likes.add(Apis.userDetail.uid);
+        notifyListeners();
+      }
+    }
+  }
+
+    void updatePostStars(PostModel postModel, int index) {
+    if (index >= 0 && index < _postList.length) {
+      if (_postList[index].stars.contains(Apis.userDetail.uid)) {
+        _postList[index].stars.remove(Apis.userDetail.uid);
+        notifyListeners();
+      } else {
+        _postList[index].stars.add(Apis.userDetail.uid);
+        notifyListeners();
+      }
+    }
   }
 
   Future<void> initialize() async {
@@ -174,12 +208,26 @@ class HomeScreenProvider extends ChangeNotifier {
     });
   }
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
   // refresh the posts
   Future<void> refreshPostList() async {
-    _postList.clear(); // Clear the existing post list
-    lastDocument = null; // Reset the last document
-    await get10PostsAtEach(); // Fetch new posts
-    notifyListeners();
+    try {
+      _postList.clear();
+      setLoading(true);
+      lastDocument = null; // Reset the last document
+      await get10PostsAtEach(); // Fetch new posts
+      setLoading(false);
+      notifyListeners();
+    } catch (e) {
+      setLoading(false);
+      WarningHelper.toastMessage('Error fetching posts: ${e.toString()}');
+    }
   }
 
   // get the posts

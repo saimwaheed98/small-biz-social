@@ -10,6 +10,7 @@ class FieldText extends StatefulWidget {
     this.errorText = '',
     required this.controller,
     this.keyBoardType = TextInputType.name,
+    this.suffixIxon,
     this.validater,
   }) : super(key: key);
 
@@ -19,9 +20,9 @@ class FieldText extends StatefulWidget {
   final TextInputType keyBoardType;
   final TextEditingController controller;
   final String? Function(String?)? validater;
+  final Widget? suffixIxon;
 
   @override
-  // ignore: library_private_types_in_public_api
   _FieldTextState createState() => _FieldTextState();
 }
 
@@ -54,51 +55,54 @@ class _FieldTextState extends State<FieldText> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 22),
-      child: SizedBox(
-        height: 46,
-        child: TextFormField(
-          keyboardType: widget.keyBoardType,
-          style: GoogleFonts.dmSans(
-            color: Colors.black,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
-          obscureText: widget.obscureText,
-          controller: widget.controller,
-          focusNode: _focusNode,
-          decoration: InputDecoration(
-            fillColor: const Color(0xffE7E7E7),
-            filled: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7),
-              borderSide: const BorderSide(
-                color: primaryPinkColor,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7),
-              borderSide: const BorderSide(
-                color: primaryPinkColor,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7),
-              borderSide: BorderSide.none,
-            ),
-            labelText: widget.labelText,
-            labelStyle: GoogleFonts.dmSans(
-              color: labelColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            keyboardType: widget.keyBoardType,
+            style: GoogleFonts.dmSans(
+              color: Colors.black,
               fontSize: 12,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
             ),
-            counterText: '',
+            obscureText: widget.obscureText,
+            controller: widget.controller,
+            focusNode: _focusNode,
+            decoration: InputDecoration(
+              fillColor: const Color(0xffE7E7E7),
+              filled: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(7),
+                borderSide: const BorderSide(
+                  color: primaryPinkColor,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(7),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(7),
+                borderSide: const BorderSide(
+                  color: primaryPinkColor,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(7),
+                borderSide: BorderSide.none,
+              ),
+              labelText: widget.labelText,
+              labelStyle: GoogleFonts.dmSans(
+                color: labelColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+              suffixIcon: widget.suffixIxon,
+              counterText: '',
+            ),
+            validator: widget.validater,
           ),
-          validator: widget.validater,
-        ),
+        ],
       ),
     );
   }

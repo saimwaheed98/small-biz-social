@@ -15,9 +15,11 @@ import 'package:smallbiz/widgets/app_bar.dart';
 
 class PostScreen extends StatelessWidget {
   final PostModel? data;
+  final int index;
   PostScreen({
     super.key,
     this.data,
+    required this.index,
   });
 
   static const routeName = '/post-screen';
@@ -46,7 +48,7 @@ class PostScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PostContainer(data: data!, isHomeScreen: false),
+                  PostContainer(data: data!, index: index, isHomeScreen: false),
                   if (data!.likes.isNotEmpty || data!.stars.isNotEmpty)
                     Row(
                       children: [

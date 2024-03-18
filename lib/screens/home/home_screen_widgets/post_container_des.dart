@@ -25,8 +25,12 @@ import 'package:smallbiz/widgets/video_player_internet.dart';
 
 class PostContainer extends StatelessWidget {
   const PostContainer(
-      {super.key, required this.data, required this.isHomeScreen});
+      {super.key,
+      required this.data,
+      required this.isHomeScreen,
+      required this.index});
   final PostModel data;
+  final int index;
   final bool isHomeScreen;
   @override
   Widget build(BuildContext context) {
@@ -227,11 +231,6 @@ class PostContainer extends StatelessWidget {
                           containerImage: Images.likeImage,
                           containerText: '${data.likes.length}',
                         ),
-                      if (data.likes.isNotEmpty)
-                        LikeCounterContainer(
-                          containerImage: Images.heartImage,
-                          containerText: '${data.likes.length}',
-                        ),
                       if (data.stars.isNotEmpty)
                         LikeCounterContainer(
                           containerImage: Images.starImage,
@@ -254,13 +253,16 @@ class PostContainer extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  LikeButton(data: data),
-                  StarButton(data: data),
+                  LikeButton(data: data, index: index),
+                  StarButton(data: data, index: index),
                   InkWell(
                     onTap: () {
                       PersistentNavBarNavigator.pushDynamicScreen(context,
                           screen: MaterialPageRoute(
-                            builder: (context) => PostScreen(data: data),
+                            builder: (context) => PostScreen(
+                              data: data,
+                              index: index,
+                            ),
                           ),
                           withNavBar: true);
                     },
@@ -285,8 +287,10 @@ class PostContainer extends StatelessWidget {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
-                      DeepLinkPostService().createReferLink(data).then((value) {
+                    onTap: () async {
+                      await DeepLinkPostService()
+                          .createReferLink(data)
+                          .then((value) {
                         Share.share(value);
                       });
                     },

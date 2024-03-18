@@ -41,10 +41,11 @@ class SigninProvider extends ChangeNotifier {
       setLoading(true);
       await Apis.auth
           .signInWithEmailAndPassword(
-              email: emailController.text.toString(),
-              password: passwordController.text.toString())
+              email: emailController.text.toString().trim(),
+              password: passwordController.text.toString().trim())
           .then((value) {
         Apis.getLoginInfo(value.user!.uid);
+        Apis.getSelfInfo();
         Navigator.pushReplacementNamed(context, BottomBar.routename);
         clearControllers();
         debugPrint('Login Successfully');
@@ -53,8 +54,7 @@ class SigninProvider extends ChangeNotifier {
     } catch (e) {
       setLoading(false);
       debugPrint('Error While Rendering Login');
-      WarningHelper.showWarningDialog(
-          context, 'Check Connection', 'Please Check Your internet Connection');
+      WarningHelper.showWarningDialog(context, 'Error', e.toString());
     } finally {
       setLoading(false);
     }

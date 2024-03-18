@@ -47,7 +47,8 @@ class CreateAccountProviders extends ChangeNotifier {
       // for creating a new user with email and password
       Apis.auth
           .createUserWithEmailAndPassword(
-              email: email.text.toString(), password: password.text.toString())
+              email: email.text.toString().trim(),
+              password: password.text.toString().trim())
           .then((value) {
         setLoading(true);
         // for creating a new user in firestore
@@ -74,5 +75,21 @@ class CreateAccountProviders extends ChangeNotifier {
       WarningHelper.showWarningDialog(
           context, 'Error', 'error while creating account');
     }
+  }
+
+  bool _isObscure = false;
+  bool get isObscure => _isObscure;
+
+  void toggleObscure() {
+    _isObscure = !_isObscure;
+    notifyListeners();
+  }
+
+  bool _isObscure2 = false;
+  bool get isObscure2 => _isObscure2;
+
+  void toggleObscure2() {
+    _isObscure2 = !_isObscure2;
+    notifyListeners();
   }
 }

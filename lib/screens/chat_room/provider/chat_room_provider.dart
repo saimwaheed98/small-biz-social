@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
 import 'package:smallbiz/models/chat_model.dart';
+import 'package:smallbiz/screens/chat_room/model/group_chat_model.dart';
 
 class ChatRoomProvider extends ChangeNotifier {
   // get the url for the groupImage
@@ -15,6 +16,8 @@ class ChatRoomProvider extends ChangeNotifier {
     _imageUrl = imageUrl;
     notifyListeners();
   }
+
+  List<GroupChatModel>? groupChatModel;
 
   /// **********************
 

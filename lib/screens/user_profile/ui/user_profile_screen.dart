@@ -322,6 +322,7 @@ class UserProfile extends StatelessWidget {
                         // final data = snapshot.data!.docs[index].data();
                         return PostContainer(
                           data: list[index],
+                          index: index,
                           isHomeScreen: true,
                         );
                       },

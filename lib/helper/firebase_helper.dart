@@ -147,8 +147,7 @@ class Apis {
       final body = {
         "to": chatUser.pushToken,
         "notification": {
-          "title": userDetail.firstName +
-              userDetail.lastName, //our name should be send
+          "title": userDetail.firstName + userDetail.lastName,
           "body": msg,
           "android_channel_id": "chats"
         },

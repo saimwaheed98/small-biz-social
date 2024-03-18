@@ -8,7 +8,6 @@ import 'package:smallbiz/screens/users_chat/provider/chat_screen_provider.dart';
 import 'package:smallbiz/utils/colors.dart';
 import 'package:smallbiz/utils/date_time.dart';
 import 'package:smallbiz/widgets/app_bar.dart';
-import 'package:gap/gap.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -77,24 +76,34 @@ class NotificationScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        AppTextStyle(
-                                            textName: data.title,
-                                            textColor: primaryTextColor,
-                                            textSize: 20,
-                                            textWeight: FontWeight.w400),
-                                        const Gap(100),
-                                        AppTextStyle(
-                                            textName: MyDateUtil.getMessageTime(
-                                                context: context,
-                                                time: data.sentAt),
-                                            textColor: primaryTextColor,
-                                            textSize: 12,
-                                            textWeight: FontWeight.w400),
-                                      ],
+                                    SizedBox(
+                                      height: 30,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: 120,
+                                            child: AppTextStyle(
+                                                textName: data.title,
+                                                textColor: primaryTextColor,
+                                                textSize: 20,
+                                                maxLines: 1,
+                                                textWeight: FontWeight.w400),
+                                          ),
+                                          const SizedBox(
+                                            width: 30,
+                                          ),
+                                          AppTextStyle(
+                                              textName:
+                                                  MyDateUtil.getMessageTime(
+                                                      context: context,
+                                                      time: data.sentAt),
+                                              textColor: primaryTextColor,
+                                              textSize: 12,
+                                              textWeight: FontWeight.w400),
+                                        ],
+                                      ),
                                     ),
                                     SizedBox(
                                       width: 200,
@@ -102,7 +111,7 @@ class NotificationScreen extends StatelessWidget {
                                           textName: data.message,
                                           textColor: primaryTextColor,
                                           textSize: 16,
-                                          maxLines: 2,
+                                          maxLines: 1,
                                           textWeight: FontWeight.w400),
                                     ),
                                   ],

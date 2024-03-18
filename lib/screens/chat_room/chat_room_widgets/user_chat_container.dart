@@ -110,7 +110,7 @@ class UserChatContainer extends StatelessWidget {
                               builder: (context, provider, child) {
                                 final sentTime = provider.message.sent;
                                 int parsedSentTime =
-                                    0; // Default value if parsing fails
+                                    0;  
 
                                 try {
                                   parsedSentTime = int.parse(sentTime);

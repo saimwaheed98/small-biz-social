@@ -60,6 +60,7 @@ class ProfileSetting extends StatelessWidget {
           IconButton(
               onPressed: () async {
                 await Apis.updateActiveStatus(false);
+                await provider.cleanValues();
                 await Apis.auth.signOut().then((value) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => CreateAccount(),
@@ -183,7 +184,8 @@ class ProfileSetting extends StatelessWidget {
                         Container(
                           constraints: const BoxConstraints(maxHeight: 150),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding:
+                                const EdgeInsets.only(left: 16, bottom: 16),
                             child: TextFormField(
                               maxLines: null,
                               decoration: InputDecoration(

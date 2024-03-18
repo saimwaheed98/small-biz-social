@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:smallbiz/helper/warning_helper.dart';
 import 'package:smallbiz/models/user_detail_model.dart';
 import 'package:smallbiz/screens/user_profile/ui/user_profile_screen.dart';
 import 'package:smallbiz/screens/users_chat/ui/chat_screen.dart';
@@ -18,30 +19,21 @@ class ChatUserContainer extends StatefulWidget {
 }
 
 class _ChatUserContainerState extends State<ChatUserContainer> {
-  bool isCheck = false;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (isCheck == true) {
-          setState(() {
-            isCheck = false;
-          });
-        } else {
-          PersistentNavBarNavigator.pushNewScreen(context,
-              withNavBar: false,
-              screen: ChatScreen(
-                user: widget.user,
-              ));
-        }
+        PersistentNavBarNavigator.pushNewScreen(context,
+            withNavBar: false,
+            screen: ChatScreen(
+              user: widget.user,
+            ));
       },
-      onLongPress: () {
-        // Apis.getMembers(widget.user.uid, [widget.user.uid], context);
-        setState(() {
-          isCheck = true;
+      onLongPress: () async {
+        await Clipboard.setData(ClipboardData(text: widget.user.firstName))
+            .then((value) {
+          WarningHelper.toastMessage('Copied to clipboard');
         });
-        Clipboard.setData(ClipboardData(text: widget.user.uid));
       },
       child: SizedBox(
         child: Column(
@@ -94,19 +86,6 @@ class _ChatUserContainerState extends State<ChatUserContainer> {
                             ),
                           )),
                     ),
-                    if (isCheck == true)
-                      Container(
-                        height: 48,
-                        width: 48,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blue.withOpacity(0.5)),
-                        child: const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ),
                     // if the user is online then show the green dot otherwise it will not show
                     if (widget.user.isOnline)
                       Positioned(

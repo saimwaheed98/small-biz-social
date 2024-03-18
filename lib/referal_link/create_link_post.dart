@@ -50,6 +50,7 @@ class DeepLinkPostService {
               PersistentNavBarNavigator.pushNewScreen(context,
                   screen: PostScreen(
                     data: postData,
+                    index: 0,
                   ));
             }
           });

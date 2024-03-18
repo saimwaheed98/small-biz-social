@@ -123,7 +123,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeName: (context) => HomeScreen(),
         UserProfile.routename: (context) => UserProfile(),
         ChatRoomScreen.routename: (context) => const ChatRoomScreen(),
-        PostScreen.routeName: (context) => PostScreen(),
+        PostScreen.routeName: (context) => PostScreen(index: 0),
         CreateAccount.routeName: (context) => CreateAccount(),
         ProfilePicture.routeName: (context) => const ProfilePicture(),
         SubscriptionSetup.routename: (context) => SubscriptionSetup(),

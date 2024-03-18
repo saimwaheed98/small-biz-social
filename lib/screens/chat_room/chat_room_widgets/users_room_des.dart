@@ -15,7 +15,7 @@ class UserRoomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     var provider = Provider.of<ChatRoomProvider>(context, listen: false);
+    var provider = Provider.of<ChatRoomProvider>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,

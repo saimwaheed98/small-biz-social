@@ -20,6 +20,7 @@ class ChatRoomScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<ChatRoomProvider>(context, listen: false);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: scaffoldColor,
@@ -82,7 +83,7 @@ class ChatRoomScreen extends StatelessWidget {
                         return const SizedBox.shrink();
                       } else if (snapshot.data!.docs.isNotEmpty) {
                         var data = snapshot.data?.docs;
-                        var list = data
+                        provider.groupChatModel = data
                                 ?.map((e) => GroupChatModel.fromJson(e.data()))
                                 .toList() ??
                             [];
@@ -90,9 +91,9 @@ class ChatRoomScreen extends StatelessWidget {
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: list.length,
+                          itemCount: provider.groupChatModel?.length,
                           itemBuilder: (context, index) {
-                            var groupData = list[index];
+                            var groupData = provider.groupChatModel?[index];
                             return InkWell(
                               onTap: () {
                                 PersistentNavBarNavigator.pushNewScreen(context,
@@ -102,7 +103,7 @@ class ChatRoomScreen extends StatelessWidget {
                                     ));
                               },
                               child: UserRoomContainer(
-                                groupData: groupData,
+                                groupData: groupData!,
                               ),
                             );
                           },
@@ -238,28 +239,32 @@ class ChatRoomScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 GestureContainer(
+                  isLoading: provider.isLoading,
                   containerName: 'Create Room',
-                  onTap: () {
+                  onTap: () async {
                     if (provider.roomNameController.text.isEmpty ||
                         provider.descriptionController.text.isEmpty ||
                         provider.image == null) {
                       provider.disposeControlers();
                       return;
-                    }
-                    provider
-                        .uploadImageToFirebase(provider.image)
-                        .then((value) {
-                      Apis.createGroup(
-                              provider.roomNameController.text,
-                              provider.imageUrl!,
-                              [Apis.userDetail.uid],
-                              provider.descriptionController.text)
-                          .then((value) {
-                        provider.setImage(null);
-                        provider.disposeControlers();
-                        Navigator.pop(context);
+                    } else if (provider.isLoading) {
+                      return;
+                    } else {
+                      await provider
+                          .uploadImageToFirebase(provider.image)
+                          .then((value) async {
+                        await Apis.createGroup(
+                                provider.roomNameController.text,
+                                provider.imageUrl!,
+                                [Apis.userDetail.uid],
+                                provider.descriptionController.text)
+                            .then((value) {
+                          provider.setImage(null);
+                          provider.disposeControlers();
+                          Navigator.pop(context);
+                        });
                       });
-                    });
+                    }
                   },
                 )
               ],
