@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -192,12 +193,41 @@ class Apis {
   }
 
   // get users for chat
-  // for getting id's of known users from firestore database
+
   static Stream<QuerySnapshot<Map<String, dynamic>>> getMyUsersId() {
-    return firestore
+    var controller = StreamController<QuerySnapshot<Map<String, dynamic>>>();
+
+    firestore
         .collection('users')
         .where('uid', isNotEqualTo: user.uid)
-        .snapshots();
+        .get()
+        .then((value) async {
+      List<String> ids = [];
+      for (var doc in value.docs) {
+        var user = UserDetail.fromJson(doc.data());
+        var id = getConversationID(user.uid);
+        if (id.isNotEmpty) {
+          var chatDoc = await firestore.collection('chats').doc(id).get();
+          if (chatDoc.exists) {
+            ids.add(user.uid);
+          }
+        }
+      }
+      if (ids.isNotEmpty) {
+        var querySnapshot = await firestore
+            .collection('users')
+            .where('uid', whereIn: ids)
+            .get();
+        controller.add(querySnapshot);
+      } else {
+        controller.addError('No users found');
+      }
+      controller.close();
+    }).catchError((error) {
+      controller.addError(error);
+      controller.close();
+    });
+    return controller.stream;
   }
 
   ///************** Chat Screen Related APIs **************
@@ -217,6 +247,22 @@ class Apis {
             'chats/${getConversationID(user?.uid ?? postUser?.uid ?? commentUser!.fromId)}/messages/')
         .orderBy('sent', descending: true)
         .snapshots();
+  }
+
+  static Future<List<String>> getRecentMessages(
+    UserDetail? user,
+  ) async {
+    final querySnapshot = await firestore.collection('chats').get();
+
+    List<String> conversationIds = [];
+    for (var doc in querySnapshot.docs) {
+      // Assuming 'conversationId' is the field name in your document
+      var conversationId = doc.data()['conversationId'] as String?;
+      if (conversationId != null) {
+        conversationIds.add(conversationId);
+      }
+    }
+    return conversationIds;
   }
 
   // for sending message
@@ -248,8 +294,12 @@ class Apis {
         sent: time);
 
     if (chatUser != null) {
+      final converId =
+          firestore.collection('chats').doc(getConversationID(chatUser.uid));
+
       final ref = firestore
           .collection('chats/${getConversationID(chatUser.uid)}/messages/');
+      await converId.set({"conversationId": getConversationID(chatUser.uid)});
       await ref.doc(time).set(message.toJson()).then((value) {
         sendPushNotification(
             chatUser,
@@ -261,14 +311,24 @@ class Apis {
                         ? '🖼️ Image'
                         : '📻 Audio');
         sendNotification(chatUser, msg, false);
+        log('message');
       });
     } else if (group != null) {
       final ref = firestore.collection('chats/${group.groupId}/messages/');
       await ref.doc(time).set(message.toJson());
+      log('group');
     } else {
+      final converId = firestore
+          .collection('chats')
+          .doc(getConversationID(postData?.uid ?? commentUser!.fromId));
       final ref = firestore.collection(
           'chats/${getConversationID(postData?.uid ?? commentUser!.fromId)}/messages/');
+      await converId.set({
+        "conversationId":
+            getConversationID(postData?.uid ?? commentUser!.fromId)
+      });
       await ref.doc(time).set(message.toJson());
+      log('post');
     }
   }
 

@@ -15,7 +15,8 @@ class UserChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<ChatScreenProvider>(context);
+    var chatProvider = Provider.of<ChatScreenProvider>(context, listen: false);
+
     return Scaffold(
       appBar: const ScaffoldAppBar(title: 'Chats'),
       backgroundColor: scaffoldColor,
@@ -57,21 +58,21 @@ class UserChat extends StatelessWidget {
                   ),
                   onChanged: (value) {
                     if (value.isNotEmpty) {
-                      provider.setSearching(true);
-                      provider.searchList.clear();
-                      for (var i in provider.userList) {
+                      chatProvider.setSearching(true);
+                      chatProvider.searchList.clear();
+                      for (var i in chatProvider.userList) {
                         if (i.firstName
                                 .toLowerCase()
                                 .contains(value.toLowerCase()) ||
                             i.lastName
                                 .toLowerCase()
                                 .contains(value.toLowerCase())) {
-                          provider.searchList.add(i);
+                          chatProvider.searchList.add(i);
                         }
                       }
                     } else {
-                      provider.setSearching(false);
-                      provider.searchList.clear();
+                      chatProvider.setSearching(false);
+                      chatProvider.searchList.clear();
                     }
                   },
                 )),
@@ -86,21 +87,24 @@ class UserChat extends StatelessWidget {
                     if (snapshot.hasError) {
                       return Center(
                         child: Text(
-                          'Error: ${snapshot.error}',
+                          '${snapshot.error}',
                           style: GoogleFonts.dmSans(fontSize: 20),
                         ),
                       );
                     }
                     if (!snapshot.hasData) {
                       return const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          backgroundColor: white,
+                          color: primaryPinkColor,
+                        ),
                       );
                     }
                     final data = snapshot.data?.docs;
-                    provider.userList = data
+                    provider.setUserList(data
                             ?.map((e) => UserDetail.fromJson(e.data()))
                             .toList() ??
-                        [];
+                        []);
                     if (provider.userList.isNotEmpty) {
                       return Expanded(
                         child: ListView.builder(
@@ -119,7 +123,7 @@ class UserChat extends StatelessWidget {
                     } else {
                       return Center(
                         child: Text(
-                          'No Data Found!',
+                          'No Chats Found!',
                           style: GoogleFonts.dmSans(fontSize: 20),
                         ),
                       );

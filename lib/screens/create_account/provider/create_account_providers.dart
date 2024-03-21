@@ -17,8 +17,8 @@ class CreateAccountProviders extends ChangeNotifier {
         firstName.text.isNotEmpty &&
         lastName.text.isNotEmpty &&
         password.text.isNotEmpty &&
-        password.text == reEnterPassword.text;
-    // You can add more complex validation logic as needed
+        password.text == reEnterPassword.text &&
+        isPasswordValid();
   }
 
   final email = TextEditingController();

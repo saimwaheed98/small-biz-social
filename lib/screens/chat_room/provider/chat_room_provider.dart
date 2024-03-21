@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smallbiz/helper/firebase_helper.dart';
 import 'package:smallbiz/models/chat_model.dart';
+import 'package:smallbiz/models/user_detail_model.dart';
 import 'package:smallbiz/screens/chat_room/model/group_chat_model.dart';
 
 class ChatRoomProvider extends ChangeNotifier {
@@ -15,6 +16,19 @@ class ChatRoomProvider extends ChangeNotifier {
   getImageUrl(String imageUrl) {
     _imageUrl = imageUrl;
     notifyListeners();
+  }
+
+  List<UserDetail> _groupUsers = [];
+  List<UserDetail> get groupUsers => _groupUsers;
+
+  setGroupUsers(UserDetail value) {
+    if (!_groupUsers.contains(value)) {
+      _groupUsers.add(value);
+      notifyListeners();
+    } else {
+      _groupUsers.remove(value);
+      notifyListeners();
+    }
   }
 
   List<GroupChatModel>? groupChatModel;
@@ -110,18 +124,17 @@ class ChatRoomProvider extends ChangeNotifier {
   int get unreadMessageCounter => _unreadMessageCounter;
   setUnreadMessageCounter(int value) {
     _unreadMessageCounter = value;
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> getUnreadMessageCounter(List<MessageModel> message) async {
-    int counter = 0; // Initialize a counter
+    int counter = 0;
 
     for (var i = 0; i < message.length; i++) {
       if (message[i].fromId != Apis.userDetail.uid && message[i].read.isEmpty) {
-        counter++; // Increment the counter when the condition is met
+        counter++;
       }
     }
-    setUnreadMessageCounter(
-        counter); // Set the counter value after iterating through all messages
+    setUnreadMessageCounter(counter);
   }
 }

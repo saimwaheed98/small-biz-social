@@ -53,7 +53,13 @@ class ChatScreenProvider extends ChangeNotifier {
 
   // for getting the value of users for the searching
   List<UserDetail> searchList = [];
-  List<UserDetail> userList = [];
+  List<UserDetail> _userList = [];
+  List<UserDetail> get userList => _userList;
+  List<UserDetail> sortedUserList = [];
+
+  void setUserList(List<UserDetail> users) {
+    _userList = users;
+  }
 
   // for getting the value of the messages for the searching
   bool _isSearchingMessage = false;

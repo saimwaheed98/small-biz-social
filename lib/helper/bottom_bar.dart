@@ -11,7 +11,6 @@ import 'package:smallbiz/screens/subscription_setup/ui/subscription_setup_screen
 import 'package:smallbiz/screens/user_profile/ui/user_profile_screen.dart';
 import 'package:smallbiz/screens/users_chat/ui/user_chat_screen.dart';
 import 'package:smallbiz/utils/colors.dart';
-
 import '../screens/home/provider/home_screen_provider.dart';
 
 class BottomBar extends StatefulWidget {

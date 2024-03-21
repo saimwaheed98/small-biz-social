@@ -9,6 +9,7 @@ import 'package:smallbiz/screens/chat_room/chat_room_widgets/user_chat_container
 import 'package:smallbiz/screens/chat_room/chat_room_widgets/users_room_des.dart';
 import 'package:smallbiz/screens/chat_room/model/group_chat_model.dart';
 import 'package:smallbiz/screens/chat_room/provider/chat_room_provider.dart';
+import 'package:smallbiz/screens/creategroup/ui/create_group_screen.dart';
 import 'package:smallbiz/screens/users_chat/ui/chat_screen.dart';
 import 'package:smallbiz/utils/colors.dart';
 import 'package:smallbiz/widgets/app_bar.dart';
@@ -55,10 +56,12 @@ class ChatRoomScreen extends StatelessWidget {
                               color: white),
                           child: IconButton(
                               onPressed: () {
-                                showDialog(
-                                    useSafeArea: true,
-                                    context: context,
-                                    builder: (context) => dialouge(context));
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateGroupScreen(),
+                                  ),
+                                );
                               },
                               icon: const Icon(
                                 Icons.add,
